@@ -1,0 +1,34 @@
+steps:
+# Step 1: Build Docker image
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    [
+      'build',
+      '-t',
+      'us-central1-docker.pkg.dev/terraform-practice-498312/task-repo/app:$BUILD_ID',
+      '.'
+    ]
+ 
+# Step 2: Push image
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    [
+      'push',
+      'us-central1-docker.pkg.dev/terraform-practice-498312/task-repo/app:$BUILD_ID'
+    ]
+ 
+# Step 3: Update VM metadata
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    [
+      'compute',
+      'instances',
+      'add-metadata',
+      'task-vm',
+      '--zone=us-central1-a',
+      '--metadata=app-image=us-central1-docker.pkg.dev/terraform-practice-498312/task-repo/app:$BUILD_ID'
+    ]
+ 
+images:
+- 'us-central1-docker.pkg.dev/terraform-practice-498312/task-repo/app:$BUILD_ID'
