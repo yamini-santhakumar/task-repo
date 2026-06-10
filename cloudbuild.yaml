@@ -16,23 +16,16 @@ steps:
       'push',
       'us-central1-docker.pkg.dev/terraform-practice-498312/task-repo/app:$BUILD_ID'
     ]
- 
-# Step 3: Update VM metadata
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
-  args:
-    [
-      'compute',
-      'instances',
-      'add-metadata',
-      'task-vm',
+
+# Step 3: Update your VM instance to run the container
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [
+      'compute', 'instances', 'update-container', 'container-vm',
       '--zone=us-central1-a',
-      '--metadata=app-image=us-central1-docker.pkg.dev/terraform-practice-498312/task-repo/app:$BUILD_ID'
+      '--container-image=us-central1-docker.pkg.dev/terraform-practice-498312/task-repo/app:$BUILD_ID'
     ]
  
-images:
-- 'us-central1-docker.pkg.dev/terraform-practice-498312/task-repo/app:$BUILD_ID'
-
 options:
   logging: CLOUD_LOGGING_ONLY
-  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
+  
