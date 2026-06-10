@@ -32,3 +32,7 @@ steps:
  
 images:
 - 'us-central1-docker.pkg.dev/terraform-practice-498312/task-repo/app:$BUILD_ID'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
